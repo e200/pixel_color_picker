@@ -20,18 +20,18 @@ class PixelColorPicker extends StatefulWidget {
 }
 
 class _PixelColorPickerState extends State<PixelColorPicker> {
-  final _colorPicker = ColorPicker();
+  ColorPicker _colorPicker;
 
   final _repaintBoundaryKey = GlobalKey();
   final _interactiveViewerKey = GlobalKey();
 
-  ui.Image _snapshot;
-
-  Future<void> _loadSnapshot() async {
+  Future<ui.Image> _loadSnapshot() async {
     final RenderRepaintBoundary _repaintBoundary =
         _repaintBoundaryKey.currentContext.findRenderObject();
 
-    _snapshot = await _repaintBoundary.toImage();
+    final _snapshot = await _repaintBoundary.toImage();
+
+    return _snapshot;
   }
 
   @override
@@ -40,15 +40,17 @@ class _PixelColorPickerState extends State<PixelColorPicker> {
       children: [
         RepaintBoundary(
           key: _repaintBoundaryKey,
-          child: InteractiveViewer(
-            key: _interactiveViewerKey,
-            maxScale: 10,
-            onInteractionUpdate: (details) {
-              final _offset = details.focalPoint;
+          child: ClipRRect(
+            child: InteractiveViewer(
+              key: _interactiveViewerKey,
+              maxScale: 10,
+              onInteractionUpdate: (details) {
+                final _offset = details.focalPoint;
 
-              _onInteract(_offset);
-            },
-            child: widget.child,
+                _onInteract(_offset);
+              },
+              child: widget.child,
+            ),
           ),
         ),
       ],
@@ -56,17 +58,24 @@ class _PixelColorPickerState extends State<PixelColorPicker> {
   }
 
   _onInteract(Offset offset) async {
-    if (_snapshot == null) {
-      await _loadSnapshot();
+    if (_colorPicker == null) {
+      final _snapshot = await _loadSnapshot();
+
+      final _imageByteData =
+          await _snapshot.toByteData(format: ui.ImageByteFormat.png);
+
+      final _imageBuffer = _imageByteData.buffer;
+
+      final _uint8List = _imageBuffer.asUint8List();
+
+      _colorPicker = ColorPicker(bytes: _uint8List);
+
+      _snapshot.dispose();
     }
 
     final _localOffset = _findLocalOffset(offset);
 
-    final _color = await _colorPicker.fromImage(
-      _snapshot,
-      _localOffset,
-      cacheBytes: true,
-    );
+    final _color = await _colorPicker.getColor(pixelPosition: _localOffset);
 
     widget.onChanged(_color);
   }
