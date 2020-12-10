@@ -46,12 +46,11 @@ class _HomeScreenState extends State<HomeScreen> {
           child: GridView.builder(
             shrinkWrap: true,
             physics: ClampingScrollPhysics(),
-            gridDelegate:
-                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+            ),
             itemBuilder: (context, index) {
               return Container(
-                width: 50,
-                height: 50,
                 color: _colors[index],
               );
             },
