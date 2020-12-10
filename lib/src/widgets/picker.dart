@@ -64,9 +64,6 @@ class _PixelColorPickerState extends State<PixelColorPicker>
             child: widget.child,
           ),
         ),
-        Center(
-          child: Icon(Icons.add_circle_outline),
-        )
       ],
     );
   }
