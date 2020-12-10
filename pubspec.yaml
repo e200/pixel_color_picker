@@ -1,6 +1,6 @@
 name: pixel_color_picker
 description: A new Flutter package project.
-version: 0.0.2
+version: 0.0.2+1
 homepage: https://github.com/e200/pixel_color_picker
 
 environment:
@@ -10,7 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  after_layout: ^1.0.7+2
   image: ^2.1.19
 
 dev_dependencies:
