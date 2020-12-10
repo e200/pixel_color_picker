@@ -1,6 +1,5 @@
 import 'dart:ui' as ui;
 
-import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -20,8 +19,7 @@ class PixelColorPicker extends StatefulWidget {
   _PixelColorPickerState createState() => _PixelColorPickerState();
 }
 
-class _PixelColorPickerState extends State<PixelColorPicker>
-    with AfterLayoutMixin {
+class _PixelColorPickerState extends State<PixelColorPicker> {
   final _colorPicker = ColorPicker();
 
   final _repaintBoundaryKey = GlobalKey();
@@ -29,22 +27,11 @@ class _PixelColorPickerState extends State<PixelColorPicker>
 
   ui.Image _snapshot;
 
-  final _cachingSnapshot = ValueNotifier<bool>(false);
-
   Future<void> _loadSnapshot() async {
     final RenderRepaintBoundary _repaintBoundary =
         _repaintBoundaryKey.currentContext.findRenderObject();
 
     _snapshot = await _repaintBoundary.toImage();
-  }
-
-  @override
-  void afterFirstLayout(BuildContext context) {
-    _cachingSnapshot.value = true;
-
-    _loadSnapshot().whenComplete(() {
-      _cachingSnapshot.value = false;
-    });
   }
 
   @override
@@ -69,6 +56,10 @@ class _PixelColorPickerState extends State<PixelColorPicker>
   }
 
   _onInteract(Offset offset) async {
+    if (_snapshot == null) {
+      await _loadSnapshot();
+    }
+
     final _localOffset = _findLocalOffset(offset);
 
     final _color = await _colorPicker.fromImage(
