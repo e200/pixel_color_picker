@@ -1,21 +1,44 @@
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/rendering.dart';
 import 'package:image/image.dart' as img;
 
 class ColorPicker {
-  Future<Color> fromImage(Image image) async {
-    final _offsetCenter = Offset(image.width / 2, image.height / 2);
+  img.Image _decodedImage;
 
+  Future<Color> fromImage(
+    Image image,
+    Offset offset, {
+    bool cacheBytes = false,
+  }) async {
     final _imageByteData = await image.toByteData(format: ImageByteFormat.png);
 
     final _imageBuffer = _imageByteData.buffer;
 
-    final _decodedImage = img.decodeImage(_imageBuffer.asUint8List());
+    final _uint8List = _imageBuffer.asUint8List();
+
+    return fromBytes(
+      _uint8List,
+      offset,
+      cache: cacheBytes,
+    );
+  }
+
+  Future<Color> fromBytes(
+    Uint8List bytes,
+    Offset pixelPosition, {
+    bool cache = false,
+  }) async {
+    if (cache) {
+      _decodedImage ??= img.decodeImage(bytes);
+    } else {
+      _decodedImage = img.decodeImage(bytes);
+    }
 
     final _abgrPixel = _decodedImage.getPixelSafe(
-      _offsetCenter.dx.toInt(),
-      _offsetCenter.dy.toInt(),
+      pixelPosition.dx.toInt(),
+      pixelPosition.dy.toInt(),
     );
 
     final _rgba = abgrToRgba(_abgrPixel);
