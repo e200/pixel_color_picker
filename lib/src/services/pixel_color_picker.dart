@@ -5,36 +5,14 @@ import 'package:flutter/rendering.dart';
 import 'package:image/image.dart' as img;
 
 class ColorPicker {
+  final Uint8List bytes;
+
   img.Image _decodedImage;
 
-  Future<Color> fromImage(
-    Image image,
-    Offset offset, {
-    bool cacheBytes = false,
-  }) async {
-    final _imageByteData = await image.toByteData(format: ImageByteFormat.png);
+  ColorPicker({this.bytes});
 
-    final _imageBuffer = _imageByteData.buffer;
-
-    final _uint8List = _imageBuffer.asUint8List();
-
-    return fromBytes(
-      _uint8List,
-      offset,
-      cache: cacheBytes,
-    );
-  }
-
-  Future<Color> fromBytes(
-    Uint8List bytes,
-    Offset pixelPosition, {
-    bool cache = false,
-  }) async {
-    if (cache) {
-      _decodedImage ??= img.decodeImage(bytes);
-    } else {
-      _decodedImage = img.decodeImage(bytes);
-    }
+  Future<Color> getColor({Offset pixelPosition}) async {
+    _decodedImage ??= img.decodeImage(bytes);
 
     final _abgrPixel = _decodedImage.getPixelSafe(
       pixelPosition.dx.toInt(),
