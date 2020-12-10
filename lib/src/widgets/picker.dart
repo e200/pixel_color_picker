@@ -1,5 +1,6 @@
-import 'dart:ui';
+import 'dart:ui' as ui;
 
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -11,18 +12,40 @@ class PixelColorPicker extends StatefulWidget {
 
   const PixelColorPicker({
     Key key,
-    this.child,
-    this.onChanged,
+    @required this.child,
+    @required this.onChanged,
   }) : super(key: key);
 
   @override
   _PixelColorPickerState createState() => _PixelColorPickerState();
 }
 
-class _PixelColorPickerState extends State<PixelColorPicker> {
+class _PixelColorPickerState extends State<PixelColorPicker>
+    with AfterLayoutMixin {
   final _colorPicker = ColorPicker();
 
   final _repaintBoundaryKey = GlobalKey();
+  final _interactiveViewerKey = GlobalKey();
+
+  ui.Image _snapshot;
+
+  final _cachingSnapshot = ValueNotifier<bool>(false);
+
+  Future<void> _loadSnapshot() async {
+    final RenderRepaintBoundary _repaintBoundary =
+        _repaintBoundaryKey.currentContext.findRenderObject();
+
+    _snapshot = await _repaintBoundary.toImage();
+  }
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    _cachingSnapshot.value = true;
+
+    _loadSnapshot().whenComplete(() {
+      _cachingSnapshot.value = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +54,12 @@ class _PixelColorPickerState extends State<PixelColorPicker> {
         RepaintBoundary(
           key: _repaintBoundaryKey,
           child: InteractiveViewer(
-            onInteractionEnd: (details) {
-              _onInteract();
+            key: _interactiveViewerKey,
+            maxScale: 10,
+            onInteractionUpdate: (details) {
+              final _offset = details.focalPoint;
+
+              _onInteract(_offset);
             },
             child: widget.child,
           ),
@@ -44,14 +71,24 @@ class _PixelColorPickerState extends State<PixelColorPicker> {
     );
   }
 
-  _onInteract() async {
-    final RenderRepaintBoundary _repaintBoundary =
-        _repaintBoundaryKey.currentContext.findRenderObject();
+  _onInteract(Offset offset) async {
+    final _localOffset = _findLocalOffset(offset);
 
-    final _image = await _repaintBoundary.toImage();
-
-    final _color = await _colorPicker.fromImage(_image);
+    final _color = await _colorPicker.fromImage(
+      _snapshot,
+      _localOffset,
+      cacheBytes: true,
+    );
 
     widget.onChanged(_color);
+  }
+
+  _findLocalOffset(Offset offset) {
+    final RenderBox _interactiveViewerBox =
+        _interactiveViewerKey.currentContext.findRenderObject();
+
+    final _localOffset = _interactiveViewerBox.globalToLocal(offset);
+
+    return _localOffset;
   }
 }
