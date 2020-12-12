@@ -9,7 +9,7 @@ A widget that extracts colors from its childs.
 
 This package lets you basically extract colors from everything in your screen.
 
-![Overview][overview]
+![Screenshot][screenshot]
 
 ## Getting Started
 
@@ -53,9 +53,9 @@ Any contribution to this project is welcome.
 If you find a bug or want a feature, but don't know how to fix/implement it, please fill an [issue][issue].
 If you fixed a bug or implemented a feature, please send a [pull request][pr].
 
-<!--links-->
+<!--Links-->
 [pub_badge]: https://img.shields.io/pub/v/pixel_color_picker.svg
 [pub_dev]: https://pub.dartlang.org/packages/pixel_color_picker
 [issues]: https://github.com/e200/pixel_color_picker/issues
 [pull_requests]: https://github.com/e200/pixel_color_picker/pulls
-[screeshot]: https://raw.githubusercontent.com/e200/pixel_color_picker/master/packages/screenshots/screenshot.gif
+[screenshot]: https://raw.githubusercontent.com/e200/pixel_color_picker/master/screenshots/screenshot.gif
