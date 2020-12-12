@@ -40,17 +40,15 @@ class _PixelColorPickerState extends State<PixelColorPicker> {
       children: [
         RepaintBoundary(
           key: _repaintBoundaryKey,
-          child: ClipRRect(
-            child: InteractiveViewer(
-              key: _interactiveViewerKey,
-              maxScale: 10,
-              onInteractionUpdate: (details) {
-                final _offset = details.focalPoint;
+          child: InteractiveViewer(
+            key: _interactiveViewerKey,
+            maxScale: 10,
+            onInteractionUpdate: (details) {
+              final _offset = details.focalPoint;
 
-                _onInteract(_offset);
-              },
-              child: widget.child,
-            ),
+              _onInteract(_offset);
+            },
+            child: widget.child,
           ),
         ),
       ],
