@@ -4,7 +4,7 @@ A widget that extracts colors from its childs.
 
 This package lets you basically extract colors from everything in your screen.
 
-![Screenshot][screenshot]
+![screenshot][screenshot]
 
 ## Getting Started
 
