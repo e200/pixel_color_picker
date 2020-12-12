@@ -1,10 +1,5 @@
 # pixel_color_picker
 
-![Pub package][pub_badge]
-![Pub Dev][pub_dev]
-![Issues][issues]
-![Pull Requests][pull_requests]
-
 A widget that extracts colors from its childs.
 
 This package lets you basically extract colors from everything in your screen.
