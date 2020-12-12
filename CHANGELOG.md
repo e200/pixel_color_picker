@@ -1,5 +1,9 @@
 # Pixel Color Picker
 
+## [0.0.2+3]
+
+* Updated readme.md
+
 ## [0.0.2]
 
 * Performance improvements
