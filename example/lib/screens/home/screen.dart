@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pixel_color_picker/pixel_color_picker.dart';
+import 'colored_grid.dart';
+import 'image.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -7,55 +8,52 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Color color;
-
-  final _colors = [
-    Colors.red,
-    Colors.orange,
-    Colors.brown,
-    Colors.grey,
-    Colors.deepPurple,
-    Colors.purple,
-    Colors.pink,
-    Colors.blueGrey,
-    Colors.green,
-    Colors.yellow,
-    Colors.deepOrange,
-    Colors.red,
-    Colors.indigo,
-    Colors.teal,
-    Colors.cyan,
-    Colors.amber,
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: color,
-        child: Icon(Icons.add),
-        onPressed: () {},
-      ),
-      body: PixelColorPicker(
-        onChanged: (color) {
-          setState(() {
-            this.color = color;
-          });
-        },
-        child: Center(
-          child: GridView.builder(
-            shrinkWrap: true,
-            physics: ClampingScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RaisedButton(
+              color: Theme.of(context).primaryColor,
+              child: Text(
+                'Colored Grid',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return ColoredGridScreen();
+                    },
+                  ),
+                );
+              },
             ),
-            itemBuilder: (context, index) {
-              return Container(
-                color: _colors[index],
-              );
-            },
-            itemCount: _colors.length,
-          ),
+            RaisedButton(
+              color: Theme.of(context).primaryColor,
+              child: Text(
+                'Image',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return ImageScreen();
+                    },
+                  ),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );
