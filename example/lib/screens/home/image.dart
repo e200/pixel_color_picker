@@ -7,7 +7,7 @@ class ImageScreen extends StatefulWidget {
 }
 
 class _ImageScreenState extends State<ImageScreen> {
-  Color color;
+  Color? color;
 
   @override
   Widget build(BuildContext context) {

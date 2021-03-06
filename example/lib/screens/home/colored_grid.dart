@@ -7,7 +7,7 @@ class ColoredGridScreen extends StatefulWidget {
 }
 
 class _ColoredGridScreenState extends State<ColoredGridScreen> {
-  Color color;
+  Color? color;
 
   final _colors = [
     Colors.red,
