@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Searcher extends StatelessWidget {
-  final Function(Offset offset) onSearch;
+  final Function(Offset offset)? onSearch;
 
   const Searcher({
-    Key key,
+    Key? key,
     this.onSearch,
   }) : super(key: key);
 
